@@ -1,0 +1,12 @@
+{
+    "name": "AI Control",
+    "version": "1.0.0",
+    "description": "Extension pour contrôler le comportement de l'IA",
+    "author": "Votre nom",
+    "main": "script.js",
+    "sillytavern": {
+        "version": ">=1.8.0",
+        "loadOrder": 1,
+        "compatibility": ">=1.8.0"
+    }
+} 
