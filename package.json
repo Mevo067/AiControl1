@@ -1,19 +1,26 @@
 {
+  "name": "ai_control",
+  "version": "1.0.0",
+  "description": "Extension pour contrôler le comportement de l'IA dans SillyTavern",
+  "main": "script.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sillytavern",
+    "extension",
+    "ai",
+    "control"
+  ],
+  "author": "Votre nom",
+  "license": "MIT",
   "dependencies": {
+    "python": ">=3.8.0",
     "aicontrol1": "file:",
     "buttplug": "^3.2.2",
     "buttplug-node-websockets": "^0.13.2",
     "express": "^4.21.2",
     "node-fetch": "^2.7.0"
-  },
-  "name": "aicontrol1",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
-}
+  }
+} 

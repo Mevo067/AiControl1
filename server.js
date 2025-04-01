@@ -4,10 +4,12 @@ const path = require('path');
 // Chemin vers indexExpress.js
 const expressPath = path.join(__dirname, 'indexExpress.js');
 
-// Démarrer le processus
-const serverProcess = spawn('node', [expressPath], {
+// Démarrer le processus avec le chemin correctement échappé
+const serverProcess = spawn('node', [`"${expressPath}"`], {
     stdio: 'inherit',
-    shell: true
+    shell: true,
+    windowsHide: true,
+    windowsVerbatimArguments: true
 });
 
 serverProcess.on('error', (error) => {
