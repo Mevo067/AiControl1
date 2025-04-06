@@ -1,12 +1,11 @@
 {
-    "name": "AI Control",
-    "version": "1.0.0",
-    "description": "Extension pour contrôler le comportement de l'IA",
+    "display_name": "AI Control",
+    "loading_order": 9,
+    "requires": [],
+    "optional": [],
+    "js": "script.js",
+    "css": "style.css",
     "author": "Votre nom",
-    "main": "script.js",
-    "sillytavern": {
-        "version": ">=1.8.0",
-        "loadOrder": 1,
-        "compatibility": ">=1.8.0"
-    }
+    "version": "1.0.0",
+    "homePage": "https://github.com/Mevo067/AiControl1"
 } 
