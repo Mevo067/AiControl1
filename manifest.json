@@ -4,7 +4,6 @@
     "requires": [],
     "optional": [],
     "js": "script.js",
-    "css": "style.css",
     "author": "Votre nom",
     "version": "1.0.0",
     "homePage": "https://github.com/Mevo067/AiControl1"
