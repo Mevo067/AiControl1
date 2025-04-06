@@ -303,7 +303,7 @@ function unload() {
         style.remove();
     }
 }
-
+load();
 // Exporter les fonctions nécessaires
 export {
     extensionName,
