@@ -1,9 +1,13 @@
 const express = require("express");
 const Buttplug = require("buttplug");
 const fetch = require('node-fetch');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
+
+// Activer CORS pour permettre les requêtes depuis SillyTavern
+app.use(cors());
 
 const connector = new Buttplug.ButtplugNodeWebsocketClientConnector("ws://127.0.0.1:12345");
 const client = new Buttplug.ButtplugClient("Device Control Example");
@@ -96,12 +100,76 @@ app.post("/vibrate/:id", async (req, res) => {
 });
 
 app.post("/vibrate-with-intensity-all/", async (req, res) => {
-    const intensity = req.body.intensity;
-    const devices = devices.values();
-    for (const device of devices) {
-        await device.vibrate(intensity);
+    const intensity = req.body.intensity || 1.0;
+    
+    try {
+        const deviceList = Array.from(devices.values());
+        if (deviceList.length === 0) {
+            return res.status(404).json({ error: "Aucun appareil connecté" });
+        }
+        
+        // Faire vibrer tous les appareils
+        for (const device of deviceList) {
+            if (device.vibrateAttributes && device.vibrateAttributes.length > 0) {
+                await device.vibrate(intensity);
+                console.log(`Appareil ${device.name} en vibration avec intensité ${intensity}`);
+            }
+        }
+        
+        res.json({ 
+            message: "Appareils en vibration", 
+            deviceCount: deviceList.length,
+            intensity: intensity
+        });
+    } catch (error) {
+        console.error("Erreur lors de la vibration:", error);
+        res.status(500).json({ error: "Échec de la vibration", details: error.message });
     }
-    res.json({ message: "Devices vibrating with intensity" });
+});
+
+// Route pour faire vibrer tous les appareils pendant une durée précise
+app.post("/vibrate-for-duration", async (req, res) => {
+    const intensity = req.body.intensity || 1.0;
+    const duration = req.body.duration || 1000; // Durée en millisecondes (défaut: 1 seconde)
+    
+    try {
+        const deviceList = Array.from(devices.values());
+        if (deviceList.length === 0) {
+            return res.status(404).json({ error: "Aucun appareil connecté" });
+        }
+        
+        // Faire vibrer tous les appareils
+        for (const device of deviceList) {
+            if (device.vibrateAttributes && device.vibrateAttributes.length > 0) {
+                await device.vibrate(intensity);
+                console.log(`Appareil ${device.name} en vibration avec intensité ${intensity} pendant ${duration}ms`);
+            }
+        }
+        
+        // Arrêter la vibration après la durée spécifiée
+        setTimeout(async () => {
+            for (const device of deviceList) {
+                try {
+                    if (device.vibrateAttributes && device.vibrateAttributes.length > 0) {
+                        await device.stop();
+                        console.log(`Arrêt de la vibration pour l'appareil ${device.name}`);
+                    }
+                } catch (err) {
+                    console.error(`Erreur lors de l'arrêt de l'appareil ${device.name}:`, err);
+                }
+            }
+        }, duration);
+        
+        res.json({ 
+            message: "Appareils en vibration pour une durée limitée", 
+            deviceCount: deviceList.length,
+            intensity: intensity,
+            duration: duration
+        });
+    } catch (error) {
+        console.error("Erreur lors de la vibration:", error);
+        res.status(500).json({ error: "Échec de la vibration", details: error.message });
+    }
 });
 
 app.post("/vibrate-with-intensity-all-text/", async (req, res) => {

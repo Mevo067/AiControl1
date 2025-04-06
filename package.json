@@ -18,9 +18,10 @@
   "dependencies": {
     "python": ">=3.8.0",
     "aicontrol1": "file:",
-    "buttplug": "^3.2.2",
+    "buttplug": "^1.0.17",
     "buttplug-node-websockets": "^0.13.2",
-    "express": "^4.21.2",
-    "node-fetch": "^2.7.0"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.9"
   }
 } 
