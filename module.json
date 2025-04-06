@@ -1,0 +1,8 @@
+{
+    "name": "Run NodeJS Script",
+    "version": "1.0.0",
+    "description": "Permet d'exécuter des scripts Node.js depuis SillyTavern",
+    "entry": "script.js",  // Ton fichier principal
+    "type": "plugin"
+  }
+  
