@@ -282,6 +282,7 @@ async function init() {
 
 // Fonction pour charger l'extension
 function load() {
+    alert('Chargement de l\'extension AI Control...');
     console.log('Chargement de l\'extension AI Control...');
     init();
 }
@@ -309,6 +310,6 @@ export {
     extensionConfig,
     load,
     unload
-}; 
+};
 
 console.log('Extension AI Control chargée');
