@@ -310,3 +310,5 @@ export {
     load,
     unload
 }; 
+
+console.log('Extension AI Control chargée');
