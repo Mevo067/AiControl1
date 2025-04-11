@@ -1,10 +1,12 @@
 {
     "display_name": "AI Control",
-    "loading_order": 9,
+    "loading_order": 1,
+    "version": "1.0.0",
+    "author": "Nevo067",
+    "description": "Extension pour contrôler le comportement de l'IA",
+    "entry": "./index.js",
+    "type": "extension",
     "requires": [],
     "optional": [],
-    "js": "script.js",
-    "author": "Votre nom",
-    "version": "1.0.0",
     "homePage": "https://github.com/Mevo067/AiControl1"
-} 
+}
