@@ -2,6 +2,9 @@
 // Version: 1.0.0
 // Auteur: Votre nom
 
+import { eventSource, event_types, getCharacters, saveSettings, saveSettingsDebounced } from "../../../../script.js";
+import { extension_settings, getContext, ModuleWorkerWrapper } from "../../../extensions.js";
+
 // URL de l'API Express
 const API_URL = 'http://localhost:3000';
 
@@ -302,3 +305,6 @@ console.log('Extension AI Control déchargée avec succès.');
 
 // Exporter les fonctions nécessaires
 
+jQuery(async () => {
+    console.log("2AI Control")
+});
