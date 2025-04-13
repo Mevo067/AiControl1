@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "author": "Nevo067",
     "description": "Extension pour contrôler le comportement de l'IA",
-    "entry": "./index.js",
+    "entry": "index.js",
     "type": "extension",
     "requires": [],
     "optional": [],
