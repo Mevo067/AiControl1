@@ -2,8 +2,22 @@
 // Version: 1.0.0
 // Auteur: Votre nom
 
-import { eventSource, event_types, getCharacters, saveSettings, saveSettingsDebounced } from "../../../../script.js";
-import { extension_settings, getContext, ModuleWorkerWrapper } from "../../../extensions.js";
+import { getContext, extension_settings, ModuleWorkerWrapper } from "../../../extensions.js";
+import { eventSource, event_types, getRequestHeaders } from "../../../../script.js";
+import { saveSettings, saveSettingsDebounced } from "../../../../script.js";
+
+
+let nodeProcess = null;
+
+// Configuration de l'extension
+const extensionName = 'ai_control';
+const extensionConfig = {
+    name: 'AI Control',
+    version: '1.0.0',
+    author: 'Nevo067',
+    description: 'Extension pour contrôler le comportement de l\'IA',
+    type: 'extension'
+};
 
 // URL de l'API Express
 const API_URL = 'http://localhost:3000';
@@ -11,60 +25,6 @@ const API_URL = 'http://localhost:3000';
 // Variable pour stocker le processus du serveur
 let serverProcess = null;
 
-// Fonction pour démarrer le serveur Express
-async function startServer() {
-    try {
-        console.log('Démarrage du serveur Express...');
-
-        // Utiliser l'API SillyTavern pour exécuter le script Node.js
-        const response = await fetch('/api/plugins/run-nodejs-script', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                script: 'server.js'
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Serveur démarré:', data);
-
-        // Attendre que le serveur démarre
-        return new Promise(resolve => {
-            const checkServer = setInterval(async () => {
-                try {
-                    const response = await fetch(`${API_URL}/devices`, {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-
-                    if (response.ok) {
-                        console.log('Serveur Express démarré avec succès');
-                        clearInterval(checkServer);
-                        resolve(true);
-                    }
-                } catch (error) {
-                    console.log('En attente du démarrage du serveur...');
-                }
-            }, 1000);
-
-            // Timeout après 10 secondes
-            setTimeout(() => {
-                clearInterval(checkServer);
-                console.log('Le serveur n\'a pas répondu à temps, mais pourrait être en cours de démarrage');
-                resolve(false);
-            }, 10000);
-        });
-    } catch (error) {
-        console.error('Erreur lors du démarrage du serveur Express:', error);
-        return false;
-    }
-}
 
 // Fonction pour envoyer un message à l'API
 async function sendToAPI(message) {
@@ -242,46 +202,32 @@ function addUI() {
     buttonContainer.appendChild(vibrateButton);
 
     // Ajouter le conteneur à SillyTavern
-    const quickReplyBar = document.getElementById('quickReplyBar');
+    const quickReplyBar = document.getElementById('extensions_settings');
     if (quickReplyBar) {
         quickReplyBar.appendChild(buttonContainer);
     } else {
-        console.error('Impossible de trouver #quickReplyBar');
+        console.error('Impossible de trouver #extensions_settings');
     }
 }
 
-// Fonction d'initialisation de l'extension
+// Fonction d'initialisation
 async function init() {
-    console.log('Initialisation de l\'extension AI Control...');
-    console.log('Version:', extensionConfig.version);
+    try {
 
+        // Ajouter l'interface utilisateur
+        addUI();
 
-    // Démarrer le serveur lors de l'initialisation
-    await startServer();
-
-    // Ajouter l'interface utilisateur
-    addUI();
-
-    // Intercepter les messages
-    if (typeof eventSource !== 'undefined') {
-        eventSource.addEventListener('message', (event) => {
-            const message = JSON.parse(event.data);
-            interceptMessage(message);
-        });
+        // Configurer les écouteurs d'événements
+        setupEventListeners();
+    } catch (error) {
+        console.error('Erreur lors de l\'initialisation:', error);
     }
 }
 
-// Fonction pour charger l'extension
+// Fonction de chargement
 async function load() {
-    try {
-        console.log('Chargement de l\'extension AI Control...');
-
-        await init(); // Supposons que init() soit une fonction asynchrone
-        console.log('Extension AI Control chargée avec succès.');
-    } catch (error) {
-        console.error('Erreur lors du chargement de l\'extension AI Control:', error);
-        // Vous pouvez ajouter ici des actions supplémentaires en cas d'erreur, comme afficher un message à l'utilisateur
-    }
+    console.log('Chargement de l\'extension AI Control...');
+    await init();
 }
 
 // Fonction pour décharger l'extension
@@ -305,6 +251,34 @@ console.log('Extension AI Control déchargée avec succès.');
 
 // Exporter les fonctions nécessaires
 
+
+function setup() {
+    const cheminVersScript = path.resolve('../indexExpress.js'); // ← adapte ce chemin selon ta structure
+
+    console.log("🔮 Lancement automatique du serveur Node.js depuis l’extension...");
+
+    nodeProcess = spawn('node', [cheminVersScript], {
+        stdio: 'inherit',
+        shell: true,
+    });
+
+    nodeProcess.on('close', (code) => {
+        console.log(`💀 Le serveur Node.js s’est terminé avec le code ${code}`);
+        nodeProcess = null;
+    });
+
+    nodeProcess.on('error', (err) => {
+        console.error(`🧨 Erreur lors du lancement du serveur :`, err);
+    });
+}
+
+export {
+    extensionName,
+    extensionConfig,
+    load,
+    unload
+};
+
 jQuery(async () => {
-    await init();
+
 });

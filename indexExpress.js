@@ -26,7 +26,7 @@ const devices = new Map();
 
 //Service
 
-function scoreSexuelle(text){   
+function scoreSexuelle(text){
     const pythonProcess = spawn('python', ['./AI/indexChat.py', text]);
     pythonProcess.stdout.on('data', (data) => {
         console.log("reussie")
@@ -101,13 +101,13 @@ app.post("/vibrate/:id", async (req, res) => {
 
 app.post("/vibrate-with-intensity-all/", async (req, res) => {
     const intensity = req.body.intensity || 1.0;
-    
+
     try {
         const deviceList = Array.from(devices.values());
         if (deviceList.length === 0) {
             return res.status(404).json({ error: "Aucun appareil connecté" });
         }
-        
+
         // Faire vibrer tous les appareils
         for (const device of deviceList) {
             if (device.vibrateAttributes && device.vibrateAttributes.length > 0) {
@@ -115,9 +115,9 @@ app.post("/vibrate-with-intensity-all/", async (req, res) => {
                 console.log(`Appareil ${device.name} en vibration avec intensité ${intensity}`);
             }
         }
-        
-        res.json({ 
-            message: "Appareils en vibration", 
+
+        res.json({
+            message: "Appareils en vibration",
             deviceCount: deviceList.length,
             intensity: intensity
         });
@@ -131,13 +131,13 @@ app.post("/vibrate-with-intensity-all/", async (req, res) => {
 app.post("/vibrate-for-duration", async (req, res) => {
     const intensity = req.body.intensity || 1.0;
     const duration = req.body.duration || 1000; // Durée en millisecondes (défaut: 1 seconde)
-    
+
     try {
         const deviceList = Array.from(devices.values());
         if (deviceList.length === 0) {
             return res.status(404).json({ error: "Aucun appareil connecté" });
         }
-        
+
         // Faire vibrer tous les appareils
         for (const device of deviceList) {
             if (device.vibrateAttributes && device.vibrateAttributes.length > 0) {
@@ -145,7 +145,7 @@ app.post("/vibrate-for-duration", async (req, res) => {
                 console.log(`Appareil ${device.name} en vibration avec intensité ${intensity} pendant ${duration}ms`);
             }
         }
-        
+
         // Arrêter la vibration après la durée spécifiée
         setTimeout(async () => {
             for (const device of deviceList) {
@@ -159,9 +159,9 @@ app.post("/vibrate-for-duration", async (req, res) => {
                 }
             }
         }, duration);
-        
-        res.json({ 
-            message: "Appareils en vibration pour une durée limitée", 
+
+        res.json({
+            message: "Appareils en vibration pour une durée limitée",
             deviceCount: deviceList.length,
             intensity: intensity,
             duration: duration
@@ -174,7 +174,7 @@ app.post("/vibrate-for-duration", async (req, res) => {
 
 app.post("/vibrate-with-intensity-all-text/", async (req, res) => {
     const text = req.body.text;
-    
+
     try {
         // Appel au backend Python pour évaluer l'excitabilité du texte
        const intensity = scoreSexuelle(text)
@@ -183,7 +183,7 @@ app.post("/vibrate-with-intensity-all-text/", async (req, res) => {
         for (const device of deviceList) {
             await device.vibrate(intensity);
         }
-        
+
         res.json({ message: "Appareils en vibration avec intensité basée sur le texte", intensity: intensity });
     } catch (error) {
         res.status(500).json({ error: "Échec de l'évaluation du texte ou de la vibration", details: error.message });
