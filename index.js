@@ -154,6 +154,7 @@ async function startScan() {
 function addUI() {
     // Style pour le bouton actif
     const style = document.createElement('style');
+    style.id = 'ai_control_style';
     style.textContent = `
         .menu_button.active {
             background-color: var(--accent-color) !important;
@@ -176,37 +177,17 @@ function addUI() {
     `;
     document.head.appendChild(style);
 
-    // Créer le conteneur pour les boutons
-    const buttonContainer = document.createElement('div');
-    buttonContainer.id = 'ai_control_buttons';
-    buttonContainer.className = 'flex-container flexGap5 margin-bot-10';
-
-    // Créer le bouton de scan
-    const scanButton = document.createElement('button');
-    scanButton.id = 'scan_button';
-    scanButton.className = 'menu_button';
-    scanButton.innerHTML = '<i class="fa-solid fa-search"></i> Rechercher';
-    scanButton.title = 'Rechercher des appareils connectés';
-    scanButton.onclick = startScan;
-
-    // Créer le bouton de vibration
-    const vibrateButton = document.createElement('button');
-    vibrateButton.id = 'vibrate_button';
-    vibrateButton.className = 'menu_button';
-    vibrateButton.innerHTML = '<i class="fa-solid fa-bell"></i> Vibrer';
-    vibrateButton.title = 'Faire vibrer les appareils pendant 1 seconde';
-    vibrateButton.onclick = vibrateDevices;
-
-    // Ajouter les boutons au conteneur
-    buttonContainer.appendChild(scanButton);
-    buttonContainer.appendChild(vibrateButton);
-
-    // Ajouter le conteneur à SillyTavern
-    const quickReplyBar = document.getElementById('extensions_settings');
-    if (quickReplyBar) {
-        quickReplyBar.appendChild(buttonContainer);
+    // Ajout d'un message ou d'un badge dans la barre d'extension (optionnel)
+    const extensionBar = document.getElementById('extensions-bar');
+    if (extensionBar) {
+        // Exemple : extensionBar.appendChild(document.createTextNode('AI Control chargé'));
     } else {
-        console.error('Impossible de trouver #extensions_settings');
+        const quickReplyBar = document.getElementById('quickReplyBar');
+        if (quickReplyBar) {
+            // Exemple : quickReplyBar.appendChild(document.createTextNode('AI Control chargé'));
+        } else {
+            console.error("Impossible de trouver la barre d'extension (#extensions-bar ou #quickReplyBar)");
+        }
     }
 }
 
@@ -216,6 +197,8 @@ async function init() {
 
         // Ajouter l'interface utilisateur
         addUI();
+
+        console.log("2Ae")
 
         // Configurer les écouteurs d'événements
         setupEventListeners();
@@ -255,7 +238,7 @@ console.log('Extension AI Control déchargée avec succès.');
 function setup() {
     const cheminVersScript = path.resolve('../indexExpress.js'); // ← adapte ce chemin selon ta structure
 
-    console.log("🔮 Lancement automatique du serveur Node.js depuis l’extension...");
+    console.log("🔮 Lancement automatique du serveur Node.js depuis l'extension...");
 
     nodeProcess = spawn('node', [cheminVersScript], {
         stdio: 'inherit',
@@ -263,7 +246,7 @@ function setup() {
     });
 
     nodeProcess.on('close', (code) => {
-        console.log(`💀 Le serveur Node.js s’est terminé avec le code ${code}`);
+        console.log(`💀 Le serveur Node.js s'est terminé avec le code ${code}`);
         nodeProcess = null;
     });
 
@@ -280,5 +263,24 @@ export {
 };
 
 jQuery(async () => {
+    addUI();
 
+    // Chemin du dossier de l'extension
+    const extensionFolderPath = `./data/default-user/extensions/AiControl1`;
+
+    // Charger dynamiquement le HTML des paramètres
+    const settingsHtml = await $.get(`${extensionFolderPath}/settings.html`);
+
+    // Ajouter le HTML à la colonne de droite des paramètres d'extensions
+    $("#extensions_settings").append(settingsHtml);
+
+    console.log(settingsHtml);
+    console.log("settingsHtml")
+
+    // Récupérer les boutons et leur associer les méthodes
+    $("#scan_button_settings").on("click", startScan);
+    $("#vibrate_button_settings").on("click", vibrateDevices);
+
+    // Charger les paramètres si besoin (fonction à créer si tu as des settings)
+    // loadSettings();
 });
