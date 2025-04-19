@@ -1,10 +1,83 @@
-<div id="ai_control_settings">
-    <h3>Paramètres AI Control</h3>
-    <button id="scan_button_settings" class="menu_button">
-        <i class="fa-solid fa-search"></i> Rechercher (depuis settings)
-    </button>
-    <button id="vibrate_button_settings" class="menu_button">
-        <i class="fa-solid fa-bell"></i> Vibrer (depuis settings)
-    </button>
-    <div id="ai_control_status"></div>
+<div class="ai-control-extension-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>AI Control</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <div class="ai-control-extension_block flex-container" style="display: flex; gap: 10px;">
+                <button id="scan_button_settings" class="menu_button" type="button">
+                    <i class="fa-solid fa-search"></i> Rechercher
+                </button>
+                <button id="vibrate_button_settings" class="menu_button" type="button">
+                    <i class="fa-solid fa-bell"></i> Vibrer
+                </button>
+            </div>
+            <hr class="sysHR" />
+            <div class="connected-devices-section">
+                <h4>Appareils connectés</h4>
+                <div id="connected_devices_list" class="devices-list">
+                    <!-- La liste des appareils sera injectée ici dynamiquement -->
+                </div>
+            </div>
+            <div id="ai_control_status"></div>
+        </div>
+    </div>
 </div>
+
+<style>
+.connected-devices-section {
+    margin-top: 15px;
+}
+
+.connected-devices-section h4 {
+    margin-bottom: 10px;
+    color: var(--SmartThemeQuoteColor);
+}
+
+.devices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.device-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--SmartThemeBorderColor);
+}
+
+.device-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.device-info i {
+    color: var(--SmartThemeQuoteColor);
+}
+
+.disconnect-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background-color: var(--SmartThemeBodyColor);
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 4px;
+    color: var(--SmartThemeBodyColor);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.disconnect-button:hover {
+    background-color: var(--SmartThemeBorderColor);
+}
+
+.disconnect-button i {
+    color: var(--SmartThemeQuoteColor);
+}
+</style>
